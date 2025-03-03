@@ -2,7 +2,7 @@
 
 <?= $this->section('style'); ?>
 <!-- <link rel="stylesheet" href="https://cdn.datatables.net/2.2.2/css/dataTables.bootstrap4.css"> -->
-<link rel="stylesheet" href="../../adminlte/plugins/datatables-bs4/css/dataTables.bootstrap4.css">
+<link rel="stylesheet" href="<?= base_url(); ?>adminlte/plugins/datatables-bs4/css/dataTables.bootstrap4.css">
 <?= $this->endSection(); ?>
 
 <?= $this->section('content'); ?>
@@ -211,9 +211,9 @@
 <!-- <script src="https://code.jquery.com/jquery-3.7.1.js"></script> -->
 <!-- JS Plugin for datatable -->
 <!-- <script src="https://cdn.datatables.net/2.2.2/js/dataTables.js"></script> -->
-<script src="../../adminlte/plugins/datatables/jquery.dataTables.js"></script>
+<script src="<?= base_url(); ?>adminlte/plugins/datatables/jquery.dataTables.js"></script>
 <!-- <script src="https://cdn.datatables.net/2.2.2/js/dataTables.bootstrap4.js"></script> -->
-<script src="../../adminlte/plugins/datatables-bs4/js/dataTables.bootstrap4.js"></script>
+<script src="<?= base_url(); ?>adminlte/plugins/datatables-bs4/js/dataTables.bootstrap4.js"></script>
 <!-- JS function for tabale that using datatable plugin -->
 <script type="text/javascript">
     $('#historiskl').DataTable({
