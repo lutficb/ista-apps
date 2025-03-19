@@ -4,15 +4,15 @@ namespace App\Models;
 
 use CodeIgniter\Model;
 
-class Skl extends Model
+class Skt extends Model
 {
-    protected $table            = 'skl';
+    protected $table            = 'skt';
     protected $primaryKey       = 'id';
     protected $useAutoIncrement = true;
     protected $returnType       = 'array';
     protected $useSoftDeletes   = false;
     protected $protectFields    = true;
-    protected $allowedFields    = ['name', 'name_orang_tua', 'kelas', 'tahun_ajaran'];
+    protected $allowedFields    = ['name', 'name_orang_tua', 'kelas', 'tahun_ajaran', 'tanggungan'];
 
     // Dates
     protected $useTimestamps = true;

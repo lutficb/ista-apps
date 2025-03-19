@@ -74,4 +74,45 @@ class Validation extends BaseConfig
             ]
         ],
     ];
+
+    public $skt_rules = [
+        'name' => [
+            'label' => 'Nama Santri',
+            'rules' => 'required|min_length[3]',
+            'errors' => [
+                'required' => '{field} harus diisi.',
+                'min_length' => '{field} minimal 3 karakter.'
+            ]
+        ],
+        'name_orang_tua' => [
+            'label' => 'Nama Orang Tua',
+            'rules' => 'required|min_length[3]',
+            'errors' => [
+                'required' => '{field} harus diisi.',
+                'min_length' => '{field} minimal 3 karakter.'
+            ]
+        ],
+        'kelas' => [
+            'label' => 'Kelas',
+            'rules' => 'required',
+            'errors' => [
+                'required' => '{field} harus diisi.'
+            ]
+        ],
+        'tahun_ajaran' => [
+            'label' => 'Tahun Ajaran',
+            'rules' => 'required',
+            'errors' => [
+                'required' => '{field} harus diisi.'
+            ]
+        ],
+        'tanggungan' => [
+            'label' => 'Tanggungan',
+            'rules' => 'required|min_length[3]',
+            'errors' => [
+                'required' => '{field} harus diisi.',
+                'min_length' => '{field} minimal 3 karakter.'
+            ]
+        ],
+    ];
 }

@@ -17,7 +17,15 @@
                     <a href="<?= base_url('skl'); ?>" class="nav-link">
                         <i class="nav-icon far fa-clipboard"></i>
                         <p>
-                            SKL
+                            Suket Lunas
+                        </p>
+                    </a>
+                </li>
+                <li class="nav-item">
+                    <a href="<?= base_url('skt'); ?>" class="nav-link">
+                        <i class="nav-icon fas fa-file-invoice-dollar"></i>
+                        <p>
+                            Suket Tanggungan
                         </p>
                     </a>
                 </li>

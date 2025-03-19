@@ -3,31 +3,28 @@
 namespace App\Controllers;
 
 use App\Models\Skl;
+use App\Models\Skt;
 use CodeIgniter\I18n\Time;
 
 class Home extends BaseController
 {
     protected $sklModel;
+    protected $sktModel;
 
     public function __construct()
     {
         $this->sklModel = new Skl();
+        $this->sktModel = new Skt();
     }
 
     public function index()
     {
-        // Data kelas
-        $kelas = ['VII A1', 'VII A2', 'VII A3', 'VIII A1', 'VIII A2', 'VIII A3', 'IX A1', 'IX A2', 'IX A3', 'IDAD A', 'X A1', 'X A2', 'X A3', 'XI A1', 'XI A2', 'XI A3', 'XII A1', 'XII A2', 'XII A3', 'VII B1', 'VII B2', 'VII B3', 'VIII B1', 'VIII B2', 'VIII B3', 'IX B1', 'IX B2', 'IX B3', 'IDAD B', 'X B1', 'X B2', 'X B3', 'XI B1', 'XI B2', 'XI B3', 'XII B1', 'XII B2', 'XII B3', '1A', '1B', '2A', '2B', '3A', '3B', '4A', '4B', '5A', '5B', '6A', '6B'];
-
-        // Data tahun ajaran
-        $tahunAjaran = ['2019/2020', '2020/2021', '2021/2022', '2022/2023', '2023/2024', '2024/2025', '2025/2026', '2026/2027', '2027/2028', '2028/2029', '2029/2030'];
-
         // Data yang akan dikirim ke view
         $data = [
             'title' => 'Bendahara',
             'subtitle' => 'Surat Keterangan Lunas',
-            'kelas' => $kelas,
-            'tahunAjaran' => $tahunAjaran,
+            'kelas' => $this->kelas(),
+            'tahunAjaran' => $this->tahunAjaran(),
             'skl' => $this->sklModel->orderBy('created_at', 'DESC')->findAll(),
         ];
 
@@ -139,5 +136,106 @@ class Home extends BaseController
             ],
         ];
         echo json_encode($response);
+    }
+
+    public function skt()
+    {
+        $data = [
+            'title' => 'Bendahara',
+            'subtitle' => 'Surat Keterangan Tanggungan',
+            'skt' => $this->sktModel->orderBy('created_at', 'DESC')->findAll(),
+            'kelas' => $this->kelas(),
+            'tahunAjaran' => $this->tahunAjaran(),
+        ];
+
+        // Jika bukan POST request, maka tampilkan view
+        if (!$this->request->is('post')) {
+            return view('bendahara/skt', $data);
+        }
+
+        // Data yang akan disimpan
+        $dataSkt = [
+            'name' => $this->request->getPost('nama'),
+            'name_orang_tua' => $this->request->getPost('namaortu'),
+            'kelas' => $this->request->getPost('kelas'),
+            'tahun_ajaran' => $this->request->getPost('tahunajaran'),
+            'tanggungan' => $this->request->getPost('tanggungan'),
+        ];
+
+        // Validasi data
+        if (!$this->validateData($dataSkt, 'skt_rules')) {
+            // Jika validasi gagal, kembalikan input SKT beserta error
+            return redirect()->back()->withInput();
+        }
+
+        // Cek apakah data berhasil disimpan
+        if (!$this->sktModel->save($dataSkt)) {
+            // Jika data gagal disimpan, tampilkan error
+            session()->setFlashdata('error', 'Data SKT gagal disimpan.');
+            return redirect()->back()->withInput();
+        }
+
+        // Save dataSkt to session
+        session()->setFlashdata('success', 'Data SKT berhasil disimpan.');
+
+        // Kemablikan ke halaman SKT
+        return redirect()->to('skt');
+    }
+
+    public function cetakSkt($id)
+    {
+        // Get data from database based on id sent from user
+        $skt = $this->sktModel->find($id);
+
+        // Create month in Indonesia
+        $bulanIndo = [
+            1 => 'Janauri',
+            2 => 'Februari',
+            3 => 'Maret',
+            4 => 'April',
+            5 => 'Mei',
+            6 => 'Juni',
+            7 => 'Juli',
+            8 => 'Agustus',
+            9 => 'September',
+            10 => 'Oktober',
+            11 => 'November',
+            12 => 'Desember',
+        ];
+
+        // Create date object
+        $tempTanggal = Time::parse(Time::now('Asia/Jakarta')->toLocalizedString('d MMMM yyyy'));
+
+        // Creta date in Indonesia format
+        $tanggal = $tempTanggal->getDay() . ' ' . $bulanIndo[$tempTanggal->getMonth()] . ' ' . $tempTanggal->getYear();
+
+        // If data not found, return 404
+        if (!$skt) {
+            throw \CodeIgniter\Exceptions\PageNotFoundException::forPageNotFound();
+        }
+
+        // Data that will be sent to view
+        $data = [
+            'title' => 'Cetak SKT',
+            'skt' => $skt,
+            'tanggal' => $tanggal,
+        ];
+
+        // Return view
+        return view('bendahara/cetak-skt', $data);
+    }
+
+    public function kelas()
+    {
+        $kelas = ['VII A1', 'VII A2', 'VII A3', 'VIII A1', 'VIII A2', 'VIII A3', 'IX A1', 'IX A2', 'IX A3', 'IDAD A', 'X A1', 'X A2', 'X A3', 'XI A1', 'XI A2', 'XI A3', 'XII A1', 'XII A2', 'XII A3', 'VII B1', 'VII B2', 'VII B3', 'VIII B1', 'VIII B2', 'VIII B3', 'IX B1', 'IX B2', 'IX B3', 'IDAD B', 'X B1', 'X B2', 'X B3', 'XI B1', 'XI B2', 'XI B3', 'XII B1', 'XII B2', 'XII B3', '1A', '1B', '2A', '2B', '3A', '3B', '4A', '4B', '5A', '5B', '6A', '6B'];
+
+        return $kelas;
+    }
+
+    public function tahunAjaran()
+    {
+        $tahunAjaran = ['2019/2020', '2020/2021', '2021/2022', '2022/2023', '2023/2024', '2024/2025', '2025/2026', '2026/2027', '2027/2028', '2028/2029', '2029/2030'];
+
+        return $tahunAjaran;
     }
 }
